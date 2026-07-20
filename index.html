@@ -574,6 +574,16 @@ body{zoom:1.1}
 .undo-btn{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--blue);font-size:12px;font-weight:600;padding:3px 10px;margin-left:8px;cursor:pointer}
 .undo-btn:hover{border-color:var(--blue)}
 
+/* ── INFO EXPLAINERS ── */
+.info-btn{margin-left:auto;flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--text2);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.info-btn:hover{border-color:var(--blue);color:var(--blue)}
+.hk-info{background:var(--bsoft);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin:10px 0 12px;font-size:12px;color:var(--text2);line-height:1.65}
+.hk-info p{margin-bottom:8px}
+.hk-info p:last-child{margin-bottom:0}
+.hki-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px}
+.home-hero .info-btn{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.8);z-index:2}
+.se .info-btn{margin-left:0}
+
 
 /* ── TRACKER CHART ── */
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
@@ -1161,6 +1171,7 @@ function renderHome(){
 
   document.getElementById('con').innerHTML=`
     <div class="home-hero">
+      ${ib('home')}
       <div class="hero-label">${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
       <div class="hero-title">${escHtml(greeting)}, here's where you left off 🌺</div>
       <div class="hero-sub">You've completed ${dn} of ${tot} total tasks. Keep your momentum going.</div>
@@ -1244,7 +1255,7 @@ function renderTab(){
 }
 
 function renderCourse(c,w){
-  return w.secs.map((sec,si)=>{
+  return `<div class="se">Weekly Tasks${ib('course')}</div>`+w.secs.map((sec,si)=>{
     const items=(sec.items||[]).map((item,ti)=>{
       const id=item.id||tid(c.id,w.id,si,ti);
       const done=!!S.done[id];const steps=SD[id]||[];
@@ -1288,7 +1299,7 @@ function toggleExpand(id){
 
 // ── TOOLS ─────────────────────────────────────────────────────────────────────
 function renderScorecard(){
-  return`<div class="sg"><div class="se">Offer Research Scorecard</div>
+  return`<div class="sg"><div class="se">Offer Research Scorecard${ib('scorecard')}</div>
   <div class="ib">Evaluate any ClickBank offer against all 5 course criteria. Fill in the details for an instant verdict.</div>
   <div class="scg">
     <div class="sci"><div class="scl">Offer Name</div><input class="sci2" id="sc-name" placeholder="e.g. Java Burn" oninput="updateScore()"></div>
@@ -1328,7 +1339,7 @@ function updateScore(){
 
 function renderPolicy(cid){
   const platform={'fb':'Facebook','ms':'Microsoft','ig':'Instagram','ga':'Google'}[cid]||'';
-  return`<div class="sg"><div class="se">${platform} Ad Policy Checker</div>
+  return`<div class="sg"><div class="se">${platform} Ad Policy Checker${ib('policy')}</div>
   <div class="ib"><strong>Paste your ${platform} ad copy below</strong> before submitting. Platform-specific policy rules are applied automatically.</div>
   <div class="aic"><textarea class="tta" id="pc-in" placeholder="Paste your complete ad copy here — headline, body, and CTA..." style="min-height:130px" oninput="runPC('${cid}')"></textarea></div>
   <div id="pc-res"></div></div>`;
@@ -1391,7 +1402,7 @@ function renderTracker(){
   if(!S.tracker.length)S.tracker=[{date:'',name:'',spend:0,clicks:0,ctr:'',cpc:'',hops:0,sales:0,rev:0}];
   const tot=S.tracker.reduce((a,r)=>({sp:a.sp+(+r.spend||0),cl:a.cl+(+r.clicks||0),ho:a.ho+(+r.hops||0),sa:a.sa+(+r.sales||0),rv:a.rv+(+r.rev||0)}),{sp:0,cl:0,ho:0,sa:0,rv:0});
   const pfl=tot.rv-tot.sp;
-  return`<div class="sg"><div class="se">Daily Ad Campaign Tracker</div>
+  return`<div class="sg"><div class="se">Daily Ad Campaign Tracker${ib('tracker')}</div>
   <div class="ts">
     <div class="tsv"><div class="tsvv" style="color:var(--red)">$${tot.sp.toFixed(0)}</div><div class="tsvl">Total Spent</div></div>
     <div class="tsv"><div class="tsvv" style="color:var(--blue)">${tot.cl}</div><div class="tsvl">Clicks</div></div>
@@ -1477,8 +1488,8 @@ function renderDiag(cid){
   const path=S.diagPath[cid];
   let node=tree;
   for(const ch of path){if(node.opts&&node.opts[ch]?.nx)node=node.opts[ch].nx;else if(node.opts&&node.opts[ch]?.r){node={r:node.opts[ch].r};break;}}
-  if(node.r)return`<div class="sg"><div class="se">Diagnosis Wizard</div><div class="dr"><div class="drt">🔍 ${node.r.t}</div><div class="drb">${node.r.b}</div><div class="da"><strong>What to do next:</strong> ${node.r.a}</div></div><button class="drst" onclick="resetDiag('${cid}')">← Start over</button></div>`;
-  return`<div class="sg"><div class="se">Diagnosis Wizard</div>
+  if(node.r)return`<div class="sg"><div class="se">Diagnosis Wizard${ib('diag')}</div><div class="dr"><div class="drt">🔍 ${node.r.t}</div><div class="drb">${node.r.b}</div><div class="da"><strong>What to do next:</strong> ${node.r.a}</div></div><button class="drst" onclick="resetDiag('${cid}')">← Start over</button></div>`;
+  return`<div class="sg"><div class="se">Diagnosis Wizard${ib('diag')}</div>
   <div class="ib">Answer honestly to pinpoint exactly where your funnel is breaking.</div>
   <div class="ds"><div class="dq">${node.q}</div><div class="do2">${(node.opts||[]).map((o,i)=>`<button class="dopt" onclick="diagChoose('${cid}',${i})">${o.l}</button>`).join('')}</div></div>
   ${path.length?`<button class="drst" onclick="S.diagPath['${cid}']=S.diagPath['${cid}'].slice(0,-1);save();renderTab()">← Back</button>`:''}
@@ -1519,7 +1530,7 @@ function checkAutoMS(){
 }
 function renderMilestones(){
   checkAutoMS();const today=new Date().toDateString();const lastCI=S.lastCI?new Date(S.lastCI).toDateString():null;const canCI=lastCI!==today;
-  return`<div class="sg"><div class="se">Daily Streak</div>
+  return`<div class="sg"><div class="se">Daily Streak${ib('milestones')}</div>
   <div class="skc"><div class="skfl">🔥</div><div><div class="skn">${S.streak||0}</div><div class="skl">day streak</div><div class="skb2">Best: ${S.bestStreak||0} days</div></div>
   <button class="cib" onclick="doCI()" ${canCI?'':'disabled'}>${canCI?'Check in today ✓':'Checked in ✓'}</button></div>
   <div style="font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:12px;margin-top:6px">Achievements</div>
@@ -1539,7 +1550,7 @@ function doCI(){
 }
 
 function renderNotes(cid,wid){
-  return`<div class="sg"><div class="se">Your Notes — ${COURSES.find(c=>c.id===cid)?.label} Week ${wid+1}</div>
+  return`<div class="sg"><div class="se">Your Notes — ${COURSES.find(c=>c.id===cid)?.label} Week ${wid+1}${ib('notes')}</div>
   <div class="ib">Notes are saved automatically as you type. Use this space for observations, decisions, and things to remember.</div>
   <textarea class="nta" placeholder="What did you observe this week? What worked? What didn't? What are your key decisions going forward?" onchange="saveNote('${cid}',${wid},this.value)">${(S.notes[cid]||{})[wid]||''}</textarea></div>`;
 }
@@ -1605,6 +1616,35 @@ function fireConfetti(){const cols=['#4F46E5','#22C55E','#F59E0B','#A855F7','#EF
 
 // ── GLOBAL SEARCH ─────────────────────────────────────────────────────────────
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── INFO EXPLAINERS ───────────────────────────────────────────────────────────
+const INFO={
+home:["Your dashboard","<p>This is home base. The big card shows your overall progress, day streak, and remaining ad budget. The <b>course cards</b> below continue exactly where you left off, and <b>More Tools</b> holds every utility.</p><p>In the sidebar: <b>Today's Focus</b> is always your single next task — when in doubt, just do that. The <b>Budget tracker</b> logs what you spend so the app can compute profit.</p><p><b>Shortcuts:</b> press Ctrl+K (or /) to search anything, H to come home, T to switch light/dark.</p>"],
+course:["How courses work","<p>Each course is a <b>4-week program</b> broken into day-by-day tasks. Click any task to expand its detailed step-by-step instructions; tick the checkbox when done.</p><p>The next week unlocks when the current one hits <b>80% complete</b>. The tabs above switch between the course and its tools (Policy Checker, Tracker, Notes). Everything saves automatically in your browser.</p>"],
+scorecard:["Offer scorecard","<p>Evaluate any ClickBank offer against the course criteria before spending a cent: <b>Gravity between 30–80</b>, <b>$35+ per sale</b>, a mobile-friendly sales page, and no risky claims.</p><p>Fill in the numbers from the ClickBank Marketplace and you get an instant verdict. Offers that score well belong in your <b>Offer Vault</b>.</p>"],
+policy:["Ad policy checker","<p>Paste your ad copy before submitting it. The checker scans for the phrases that get weight-loss ads rejected on this platform — specific weight claims, medical language, before/after references.</p><p><b>Critical flags</b> mean likely rejection and account risk: fix them first. This is a prevention layer, not an official review — but it catches the classic mistakes.</p>"],
+tracker:["Ad tracker","<p>One row per day. Copy the numbers from your Ads Manager (spend, clicks, CTR, CPC) and ClickBank Reporting (hops, sales, revenue) each morning for the previous day.</p><p>Totals and profit compute automatically, and after two days of data a <b>spend vs. revenue chart</b> appears. Log every day — even bad ones. Trends only show up with consistent data.</p>"],
+diag:["Diagnosis wizard","<p>Answer a few questions about your metrics and the wizard walks a decision tree to find the <b>exact bottleneck</b>: weak creative, a leaking bridge page, or a bad offer.</p><p>Use it once you have real data (roughly $20+ of spend). Answer honestly — it can only diagnose what you actually measured.</p>"],
+notes:["Notes","<p>A freeform notebook for this course week. Write down observations, decisions, and surprises — the course tasks tell you what to record.</p><p>Notes save automatically as you type and are included in your backups. Reading last week's notes before starting a new week is one of the highest-value habits in this business.</p>"],
+milestones:["Milestones and streak","<p><b>Check in once a day</b> to grow your streak — consistency is the real skill this trains. Achievements unlock automatically from actual progress: first campaign, first hop, first sale, and so on.</p><p>Nothing here affects your data; it exists to make showing up daily feel rewarding.</p>"],
+abtests:["A/B test tracker","<p>The rule of testing: <b>change one variable at a time</b>. Log what you tested (headline, image, audience...), the control, the variant, and which metric decides.</p><p>Give each test 5–7 days before declaring a winner. Your test history becomes a private playbook of what works for your audience.</p>"],
+vault:["Offer vault","<p>Your personal library of ClickBank offers. Each saved offer gets an <b>automatic score</b> against the course criteria, a status (Evaluating → Testing → Winner or Eliminated), and a place to keep its hoplink.</p><p>Add every offer you seriously consider — when a campaign dies, your next candidate is already researched.</p>"],
+weekly:["Weekly review","<p>Five questions, once a week — ideally Sunday. They force you to turn the week's numbers into <b>decisions</b>: what worked, what surprised you, what you will change.</p><p>Past reviews are saved below. Reading a month of them shows your growth better than any metric.</p>"],
+email:["Email sequence builder","<p>People rarely buy on first click — a follow-up sequence is where affiliate profit hides. This tool plans a <b>7-email sequence</b> on a proven schedule: value first, story, then the offer.</p><p>Use the buttons above to fill the structure, edit every subject and body to sound like you, then copy each email into your autoresponder (like Systeme.io).</p>"],
+export:["Progress report","<p>A clean, printable summary of your whole journey — progress, spend, revenue, milestones.</p><p>Click Print and choose <b>Save as PDF</b> to keep or share it. Great for a monthly snapshot.</p>"],
+intel:["Campaign intelligence","<p>This reads your <b>Ad Tracker data</b> and computes funnel health: click-through, bridge page flow-through, and conversion — then highlights the weakest stage.</p><p>It gets smarter with more data. With less than a few days logged, treat its verdicts as rough sketches.</p>"],
+};
+function ib(k){return '<button class="info-btn" onclick="toggleInfo(&quot;'+k+'&quot;,this)" title="How does this work?">?</button>';}
+function toggleInfo(k,btn){
+  const old=document.getElementById('gi-'+k);
+  if(old){old.remove();return;}
+  const i=INFO[k];if(!i)return;
+  const host=btn.closest('.tool-view-header,.se,.intel-title,.home-hero,.aih');
+  const el=document.createElement('div');
+  el.className='hk-info';el.id='gi-'+k;
+  el.innerHTML='<div class="hki-title">'+i[0]+'</div>'+i[1];
+  (host||btn.parentElement).after(el);
+}
 let SEARCH_INDEX=null,LAST_HITS=[];
 function buildSearchIndex(){
   if(SEARCH_INDEX)return SEARCH_INDEX;
@@ -1704,7 +1744,7 @@ function renderABTestsView(){
     <div class="tool-view-header">
       <button class="tv-back" onclick="goHome()">← Home</button>
       <div class="tv-icon">🔬</div>
-      <div><div class="tv-title">A/B Test Tracker</div><div class="tv-sub">Log every experiment. Know what wins.</div></div>
+      <div><div class="tv-title">A/B Test Tracker</div><div class="tv-sub">Log every experiment. Know what wins.</div></div>${ib('abtests')}
     </div>
     <div class="ab-toolbar">
       <div class="ab-stats">
@@ -1837,7 +1877,7 @@ function renderVaultView(filter){
     <div class="tool-view-header">
       <button class="tv-back" onclick="goHome()">← Home</button>
       <div class="tv-icon">🗄️</div>
-      <div><div class="tv-title">Offer Vault</div><div class="tv-sub">Your personal ClickBank offer library — ${offers.length} offer${offers.length!==1?'s':''} saved</div></div>
+      <div><div class="tv-title">Offer Vault</div><div class="tv-sub">Your personal ClickBank offer library — ${offers.length} offer${offers.length!==1?'s':''} saved</div></div>${ib('vault')}
     </div>
     <div class="vault-toolbar">
       <div class="status-filter">${VAULT_STATUSES.map(s=>`<button class="sf-btn ${s===filter?'active':''}" onclick="renderVaultView('${s}')">${s}</button>`).join('')}</div>
@@ -1986,7 +2026,7 @@ function renderWeeklyView(){
     <div class="tool-view-header">
       <button class="tv-back" onclick="goHome()">← Home</button>
       <div class="tv-icon">📋</div>
-      <div><div class="tv-title">Weekly Review</div><div class="tv-sub">Structured check-in to turn data into decisions</div></div>
+      <div><div class="tv-title">Weekly Review</div><div class="tv-sub">Structured check-in to turn data into decisions</div></div>${ib('weekly')}
     </div>
     <button class="start-review-btn" onclick="startNewReview()">Start This Week's Review — ${dateRange}</button>
     <div id="review-form-zone"></div>
@@ -2091,7 +2131,7 @@ function renderEmailView(){
     <div class="tool-view-header">
       <button class="tv-back" onclick="goHome()">← Home</button>
       <div class="tv-icon">📧</div>
-      <div><div class="tv-title">Email Sequence Builder</div><div class="tv-sub">7-email follow-up sequence for your ClickBank offer</div></div>
+      <div><div class="tv-title">Email Sequence Builder</div><div class="tv-sub">7-email follow-up sequence for your ClickBank offer</div></div>${ib('email')}
     </div>
     <div class="seq-setup">
       <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">Sequence Setup</div>
@@ -2171,7 +2211,7 @@ function renderExportView(){
     <div class="tool-view-header">
       <button class="tv-back" onclick="goHome()">← Home</button>
       <div class="tv-icon">📄</div>
-      <div><div class="tv-title">Progress Report</div><div class="tv-sub">Export a summary of your ClickBank affiliate marketing journey</div></div>
+      <div><div class="tv-title">Progress Report</div><div class="tv-sub">Export a summary of your ClickBank affiliate marketing journey</div></div>${ib('export')}
     </div>
     <div class="export-sections">
       <div class="export-sec">
@@ -2532,7 +2572,7 @@ function renderIntelligence(){
   const hasData=!!(health&&health.totalClicks>0);
   if(!hasData){
     return`<button class="intel-back" onclick="closeIntelligence()">← Back to Home</button>
-    <div class="intel-title">Campaign Intelligence</div>
+    <div class="intel-title" style="display:flex;align-items:center;gap:10px">Campaign Intelligence ${ib('intel')}</div>
     <div class="intel-sub">Your personal campaign analyst — powered by your Ad Tracker data.</div>
     <div class="intel-card full">
       <div class="no-data-state">
@@ -2605,7 +2645,7 @@ function renderIntelligence(){
 
   return`
     <button class="intel-back" onclick="closeIntelligence()">← Back to Home</button>
-    <div class="intel-title">Campaign Intelligence</div>
+    <div class="intel-title" style="display:flex;align-items:center;gap:10px">Campaign Intelligence ${ib('intel')}</div>
     <div class="intel-sub">Your personal campaign analyst — live diagnosis powered by your Ad Tracker data.</div>
     <div class="intel-grid">
       <div class="intel-card">
